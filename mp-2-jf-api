@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room Information</title>
+  <meta name="description" content="Explore more details about this room in the Matterport tour.">
+  <meta property="og:title" content="Room Details">
+  <meta property="og:description" content="Click to get more details about the room you're exploring.">
+  <meta property="og:url" content="https://your-username.github.io/Matterport-Rooms/room-info.html">
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    button { padding: 10px 20px; font-size: 16px; background-color: #007BFF; color: white; border: none; cursor: pointer; border-radius: 5px; max-width: 100%; }
+    button:hover { background-color: #0056b3; }
+    #response { margin-top: 20px; font-size: 16px; color: #333; word-wrap: break-word; }
+    a { display: block; margin-top: 20px; color: #007BFF; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <h1>Explore More About This Room</h1>
+  <button onclick="fetchRoomInfo()" aria-label="Learn more about this room">Learn More</button>
+  <p id="response">Click the button above to get more details.</p>
+  <a href="javascript:history.back()">Go Back</a>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const room = urlParams.get("room") || "default";
+    function fetchRoomInfo() {
+      const apiUrl = "https://agent.jotform.com/0194dc9bab4177d2b1cabfe91a555cf7185b";
+      const requestData = { room };
+      document.getElementById("response").innerText = "Fetching details, please wait...";
+      fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer YOUR_API_KEY" },
+        body: JSON.stringify(requestData)
+      })
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById("response").innerText = data.message || "No additional details available.";
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          document.getElementById("response").innerText = "An error occurred while fetching details. Please try again.";
+        });
+    }
+  </script>
+</body>
+</html>
